@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import com.gajikaryawan.gajiq.model.Staff
 import com.gajikaryawan.gajiq.util.Constants
+import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_DATE
+import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_ID_PAYMENT_ROLL
+import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_IS_ATTEND
+import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_IS_PAID
 import com.gajikaryawan.gajiq.util.Constants.Companion.DATABASE_NAME
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_END_DATE
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_ID_STAFF
@@ -43,11 +47,10 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
                 + ")")
 
         val CREATE_ABSENCE_TABLE = ("CREATE TABLE " + Constants.TABLE_ABSENCE + "("
-                + Constants.ABSENCE_TIME + " DATETIME, "
                 + Constants.ABSENCE_ID_PAYMENT_ROLL + " INTEGER NOT NULL, "
                 + Constants.ABSENCE_IS_ATTEND + " BOOLEAN NOT NULL, "
                 + Constants.ABSENCE_IS_PAID + " BOOLEAN  NOT NULL, "
-                + Constants.PAYMENT_ROLL_END_DATE + " DATE  NOT NULL, "
+                + Constants.ABSENCE_DATE + " DATE  NOT NULL, "
                 + "FOREIGN KEY (" + Constants.ABSENCE_ID_PAYMENT_ROLL + ") REFERENCES " + Constants.TABLE_PAYMENT_ROLL + "(" + Constants.PAYMENT_ROLL_ID + ") ON UPDATE CASCADE ON DELETE CASCADE "
                 + ")")
 
@@ -149,6 +152,30 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
         } catch (e: SQLiteException) {
             e.printStackTrace()
             response(0, false, e.message)
+        }
+
+    }
+    fun insertAbsence(
+        idPaymentRoll: Long,date : String,
+        response: ( status: Boolean, message : String?) -> Unit
+    ) {
+        try {
+
+            val db = this.writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put(ABSENCE_IS_ATTEND, true)
+            contentValues.put(ABSENCE_IS_PAID, false)
+            contentValues.put(ABSENCE_ID_PAYMENT_ROLL, idPaymentRoll)
+            contentValues.put(ABSENCE_DATE, date)
+            val id: Long = db.insert(TABLE_ABSENCE, null, contentValues)
+            if (id > 0) {
+                response( true, null)
+            } else {
+                response( false, null)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+            response( false, e.message)
         }
 
     }
