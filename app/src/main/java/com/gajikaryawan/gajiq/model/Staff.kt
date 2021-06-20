@@ -6,4 +6,5 @@ class Staff {
     var isPerMonth : Boolean?= null
     var phone : String?= null
     var salary : Int?= null
+    var totalPay : Float?= null
 }

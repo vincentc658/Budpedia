@@ -29,4 +29,13 @@
     <color name="gray_700">#616161</color>
     <color name="gray_800">#4e4e4e</color>
     <color name="gray_900">#212121</color>
+
+
+    <color name="red_100">#FFCDD2</color>
+    <color name="red_500">#F44336</color>
+    <color name="red_800">#C62828</color>
+    <color name="red_600">#E53935</color>
+    <color name="meta_red">#F44337 </color>
+    <color name="green">#16CB89 </color>
+    <color name="light_blue">#D3F0FF </color>
 </resources>

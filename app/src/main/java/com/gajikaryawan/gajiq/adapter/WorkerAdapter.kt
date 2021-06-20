@@ -12,14 +12,14 @@ import com.gajikaryawan.gajiq.model.Staff
 class WorkerAdapter(private val context: Context,private val data: ArrayList<Staff>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_staff, parent, false))
+        ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.rv_item_staff, parent, false))
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
-            holder.tvName.setText(data[position].name)
-            holder.tvNumber.setText(data[position].phone)
-            holder.tvSalary.setText("IDR ${data[position].salary}")
-            holder.tvType.setText(if(data[position].isPerMonth!!)"Perbulan" else "Perminggu")
+            holder.tvName.text = data[position].name
+            holder.tvNumber.text = data[position].phone
+            holder.tvSalary.text = "IDR ${data[position].salary}"
+            holder.tvType.text = if(data[position].isPerMonth!!)"Perbulan" else "Perhari"
         }
     }
 

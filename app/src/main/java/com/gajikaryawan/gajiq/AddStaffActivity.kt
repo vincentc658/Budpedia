@@ -65,7 +65,7 @@ class AddStaffActivity : BaseAppCompatActivity() {
             val endDate = "${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-$numDays"
             databaseController.insertPaymentRoll(id, startDate, endDate) { id, status, message ->
                 if (status) {
-                    for(i in startDate.toInt() until endDate.toInt()){
+                    for(i in 1 until cal.get(Calendar.DATE)+1){
                         databaseController.insertAbsence(id,"${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-$i"){status, message ->}
                     }
                     finish()

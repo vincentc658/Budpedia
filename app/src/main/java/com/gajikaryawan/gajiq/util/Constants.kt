@@ -20,6 +20,7 @@ class Constants {
         const val PAYMENT_ROLL_END_DATE = "end_date"
 
         const val TABLE_ABSENCE = "absence"
+        const val ABSENCE_ID = "id"
         const val ABSENCE_DATE = "absence_time"
         const val ABSENCE_IS_ATTEND = "is_attend"
         const val ABSENCE_IS_PAID = "is_paid"
