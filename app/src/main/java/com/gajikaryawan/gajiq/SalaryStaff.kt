@@ -23,6 +23,13 @@ class SalaryStaff : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySalaryStaffBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         binding.rvWorker.layoutManager = LinearLayoutManager(this)
         binding.rvWorker.adapter = SalaryAdapter(this, generateDataStaff())
         binding.cvAddWorker.setOnClickListener {
@@ -36,6 +43,9 @@ class SalaryStaff : AppCompatActivity() {
         databaseController.getStaff().forEach {
             val staff = Staff()
             staff.name = it.name
+            staff.id = it.id
+            staff.isPerMonth = it.isPerMonth
+            staff.salary = it.salary
             val totalWorkingDay = databaseController.getTotalWorkingDay(it.id.toString())
             Log.d("total working day ", "$totalWorkingDay")
             var total=0f

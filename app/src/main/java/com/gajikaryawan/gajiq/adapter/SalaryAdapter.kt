@@ -26,7 +26,9 @@ class SalaryAdapter(private val context: Context, private val data: ArrayList<St
             holder.tvName.text = data[position].name
             holder.tvPrice.text = "IDR ${getPrice(data[position].totalPay!!)}"
             holder.cvParent.setOnClickListener {
-                context.startActivity(Intent(context, DetailSalaryActivity::class.java))
+                val intent =Intent(context, DetailSalaryActivity::class.java)
+                intent.putExtra("staff", data[position])
+                context.startActivity(intent)
             }
         }
     }

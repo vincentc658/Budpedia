@@ -16,6 +16,13 @@ class StaffActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddWorkerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         binding.rvWorker.layoutManager = LinearLayoutManager(this)
         binding.rvWorker.adapter = WorkerAdapter(this,databaseController.getStaff() )
         binding.cvAddWorker.setOnClickListener {

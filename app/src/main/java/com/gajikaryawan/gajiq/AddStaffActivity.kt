@@ -14,6 +14,13 @@ class AddStaffActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddStaffBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         val cal = Calendar.getInstance()
 
         binding.cvAddWorker.setOnClickListener {

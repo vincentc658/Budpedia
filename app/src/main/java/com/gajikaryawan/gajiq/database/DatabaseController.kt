@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import com.gajikaryawan.gajiq.model.Absence
+import com.gajikaryawan.gajiq.model.PaymentRoll
 import com.gajikaryawan.gajiq.model.Staff
 import com.gajikaryawan.gajiq.util.Constants
 import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_DATE
@@ -240,6 +241,24 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
            return res.getInt(res.getColumnIndex("total_working_day"))
         }
         return 0
+    }
+    fun getPaymentRoll(idStaff : String ): ArrayList<PaymentRoll>{
+        val db = this.writableDatabase
+        val res = db.rawQuery("SELECT $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_START_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_END_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID," +
+                " count($TABLE_ABSENCE.$ABSENCE_ID) as total_working_day from $TABLE_PAYMENT_ROLL  join $TABLE_ABSENCE on " +
+                "$TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL= $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID WHERE $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_STATUS=1 " +
+                "and $TABLE_ABSENCE.$ABSENCE_IS_PAID=1 "+
+                "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF=? group by $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID", arrayOf(idStaff))
+        val datas = ArrayList<PaymentRoll>()
+        while (res.moveToNext()) {
+            val data = PaymentRoll()
+            data.idPaymentRoll = res.getInt(res.getColumnIndex(PAYMENT_ROLL_ID))
+            data.startDate = res.getString(res.getColumnIndex(PAYMENT_ROLL_START_DATE))
+            data.endDate = res.getString(res.getColumnIndex(PAYMENT_ROLL_END_DATE))
+            data.totalWorkingDay = res.getInt(res.getColumnIndex("total_working_day"))
+            datas.add(data)
+        }
+        return datas
     }
 
 }

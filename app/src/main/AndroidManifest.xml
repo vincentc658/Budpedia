@@ -26,6 +26,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".SalaryStaff"
             android:screenOrientation="portrait"/>
+        <activity android:name=".DetailSalaryActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.gajikaryawan.gajiq
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gajikaryawan.gajiq.adapter.AbsenceAdapter
@@ -23,6 +24,13 @@ class AbsenceActivity : AppCompatActivity(), RefreshAdapter {
         super.onCreate(savedInstanceState)
         binding= ActivityAbsenceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         databaseController= DatabaseController(this)
         binding.rvList.layoutManager = LinearLayoutManager(this)
         val cal = Calendar.getInstance()
