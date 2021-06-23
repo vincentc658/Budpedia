@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">GajiQ</string>
-    <string name="LogIn">LogIn</string>
-    <string name="Register">Register</string>
-    <string name="Password">Password</string>
-    <string name="Username">Username</string>
-    <string name="LogOut">LogOut</string>
-</resources>
