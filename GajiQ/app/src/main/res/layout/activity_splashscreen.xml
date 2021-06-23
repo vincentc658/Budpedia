@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/logo"
+        tools:layout_marginTop="55dp" />
+
+    <TextView
+        android:layout_width="185dp"
+        android:layout_height="49dp"
+        android:layout_gravity="center_horizontal"
+        android:text="GajiQ"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        tools:layout_editor_absoluteX="125dp"
+        tools:layout_editor_absoluteY="399dp" />
+
+    <TextView
+        android:layout_width="324dp"
+        android:layout_height="86dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Please input data with various options to input employee data, position data, allowance data"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:layout_marginTop="55dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:text="CV MITRA AGRO INDO"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+
+</LinearLayout>

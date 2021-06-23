@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:weightSum="10">
+    <TextView
+        android:id="@+id/tv_item_nama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nama Karyawan"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/tv_item_kontak"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:text="No.Hp"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/tv_item_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:text="Jabatan"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/tv_item_domisili"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:text="Alamat"
+        android:textSize="16sp"/>
+
+</LinearLayout>
