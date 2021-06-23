@@ -8,4 +8,5 @@ class Absence {
     var staffName : String ?= null
     var idStaff : Int= 0
     var isPerMonth : Boolean= true
+    var date : String?= null
 }

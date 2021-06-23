@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent"
         android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -30,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageView
-            android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+            android:src="@drawable/ic_baseline_navigate_next_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/tvTotal"
             app:layout_constraintTop_toTopOf="@id/tvDate"
@@ -75,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            android:id="@+id/tvPay"
             android:paddingHorizontal="32dp"
             android:paddingVertical="8dp"
             android:textColor="@color/white"

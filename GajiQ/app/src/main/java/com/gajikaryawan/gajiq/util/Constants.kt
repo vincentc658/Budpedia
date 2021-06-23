@@ -26,5 +26,9 @@ class Constants {
         const val ABSENCE_IS_PAID = "is_paid"
         const val ABSENCE_ID_PAYMENT_ROLL = "id_payment_roll"
 
+
+        const val PAYMENT_ROLL_UNPAID = "1"
+        const val PAYMENT_ROLL_PAID = "2"
+
     }
 }

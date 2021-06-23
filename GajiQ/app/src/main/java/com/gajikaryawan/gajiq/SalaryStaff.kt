@@ -11,6 +11,7 @@ import com.gajikaryawan.gajiq.database.DatabaseController
 import com.gajikaryawan.gajiq.databinding.ActivityAddWorkerBinding
 import com.gajikaryawan.gajiq.databinding.ActivitySalaryStaffBinding
 import com.gajikaryawan.gajiq.model.Staff
+import com.gajikaryawan.gajiq.util.Constants
 import java.lang.Exception
 import java.text.NumberFormat
 import java.util.*
@@ -24,20 +25,29 @@ class SalaryStaff : AppCompatActivity() {
         binding = ActivitySalaryStaffBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.title= "Gaji"
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        var transactionType = Constants.PAYMENT_ROLL_UNPAID
+        intent.getStringExtra("transactionType")?.let {
+            transactionType = it
+        }
+        if(transactionType== Constants.PAYMENT_ROLL_PAID){
+            supportActionBar?.title= "Histori Gaji"
+            binding.cvAddWorker.visibility= View.GONE
+        }
         binding.rvWorker.layoutManager = LinearLayoutManager(this)
-        binding.rvWorker.adapter = SalaryAdapter(this, generateDataStaff())
+        binding.rvWorker.adapter = SalaryAdapter(this, generateDataStaff(transactionType), transactionType)
         binding.cvAddWorker.setOnClickListener {
             startActivity(Intent(this, AddStaffActivity::class.java))
         }
     }
 
-    private fun generateDataStaff(): ArrayList<Staff> {
+    private fun generateDataStaff(transactionType: String ): ArrayList<Staff> {
         val data = ArrayList<Staff>()
         var totalSalary = 0f
         databaseController.getStaff().forEach {
@@ -46,7 +56,8 @@ class SalaryStaff : AppCompatActivity() {
             staff.id = it.id
             staff.isPerMonth = it.isPerMonth
             staff.salary = it.salary
-            val totalWorkingDay = databaseController.getTotalWorkingDay(it.id.toString())
+            staff.phone = it.phone
+            val totalWorkingDay = databaseController.getTotalWorkingDay(it.id.toString(), transactionType)
             Log.d("total working day ", "$totalWorkingDay")
             var total=0f
             if (it.isPerMonth!!) {

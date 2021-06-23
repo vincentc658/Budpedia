@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gajikaryawan.gajiq.DetailSalaryActivity
 import com.gajikaryawan.gajiq.R
 import com.gajikaryawan.gajiq.model.Staff
+import com.gajikaryawan.gajiq.util.Constants
 import java.lang.Exception
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SalaryAdapter(private val context: Context, private val data: ArrayList<Staff>) :
+class SalaryAdapter(private val context: Context, private val data: ArrayList<Staff>, private val transactionType:String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.rv_item_sallary_staff, parent, false))
@@ -28,6 +29,7 @@ class SalaryAdapter(private val context: Context, private val data: ArrayList<St
             holder.cvParent.setOnClickListener {
                 val intent =Intent(context, DetailSalaryActivity::class.java)
                 intent.putExtra("staff", data[position])
+                intent.putExtra("transactionType", transactionType)
                 context.startActivity(intent)
             }
         }

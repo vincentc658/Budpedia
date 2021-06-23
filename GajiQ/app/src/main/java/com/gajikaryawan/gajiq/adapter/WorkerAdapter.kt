@@ -8,6 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gajikaryawan.gajiq.R
 import com.gajikaryawan.gajiq.model.Staff
+import java.lang.Exception
+import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class WorkerAdapter(private val context: Context,private val data: ArrayList<Staff>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -18,7 +22,7 @@ class WorkerAdapter(private val context: Context,private val data: ArrayList<Sta
         if (holder is ItemViewHolder) {
             holder.tvName.text = data[position].name
             holder.tvNumber.text = data[position].phone
-            holder.tvSalary.text = "IDR ${data[position].salary}"
+            holder.tvSalary.text = "IDR ${getPrice(data[position].salary!!.toFloat())}"
             holder.tvType.text = if(data[position].isPerMonth!!)"Perbulan" else "Perhari"
         }
     }
@@ -29,5 +33,18 @@ class WorkerAdapter(private val context: Context,private val data: ArrayList<Sta
         var tvName: TextView = view.findViewById(R.id.tvName)
         var tvSalary: TextView = view.findViewById(R.id.tvSalary)
         var tvType: TextView = view.findViewById(R.id.tvType)
+    }
+    private fun getPrice(price: Float): String {
+        return try {
+
+            val locale = Locale("in")
+            val nf = NumberFormat.getNumberInstance(locale)
+
+
+
+            nf.format(price)
+        } catch (e: Exception) {
+            price.toString()
+        }
     }
 }

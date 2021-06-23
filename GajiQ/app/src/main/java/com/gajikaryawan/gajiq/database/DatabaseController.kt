@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.gajikaryawan.gajiq.model.Absence
 import com.gajikaryawan.gajiq.model.PaymentRoll
 import com.gajikaryawan.gajiq.model.Staff
@@ -15,9 +16,11 @@ import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_ID_PAYMENT_ROLL
 import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_IS_ATTEND
 import com.gajikaryawan.gajiq.util.Constants.Companion.ABSENCE_IS_PAID
 import com.gajikaryawan.gajiq.util.Constants.Companion.DATABASE_NAME
+import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_DATE
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_END_DATE
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_ID
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_ID_STAFF
+import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_PAID
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_START_DATE
 import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_STATUS
 import com.gajikaryawan.gajiq.util.Constants.Companion.STAFF_ID
@@ -92,7 +95,7 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
         isPermonth: Boolean,
         salary: Int,
         phone: String,
-        response: (id : Long, status: Boolean, message : String?) -> Unit
+        response: (id: Long, status: Boolean, message: String?) -> Unit
     ) {
         try {
 
@@ -130,17 +133,22 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
         }
         return datas
     }
-    fun getPaymentRol(id : Long, date :String) : Boolean{
+
+    fun getPaymentRol(id: Long, date: String): Boolean {
         val db = this.writableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_PAYMENT_ROLL WHERE $PAYMENT_ROLL_START_DATE >= ? and $PAYMENT_ROLL_ID_STAFF=?  ", arrayOf(date, id.toString()))
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_PAYMENT_ROLL WHERE $PAYMENT_ROLL_START_DATE >= ? and $PAYMENT_ROLL_ID_STAFF=?  ",
+            arrayOf(date, id.toString())
+        )
 
         return cursor != null && cursor.moveToFirst()
     }
+
     fun insertPaymentRoll(
         idStaff: Long,
         startDate: String,
         endDate: String,
-        response: (id : Long, status: Boolean, message : String?) -> Unit
+        response: (id: Long, status: Boolean, message: String?) -> Unit
     ) {
         try {
 
@@ -162,9 +170,10 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
         }
 
     }
+
     fun insertAbsence(
-        idPaymentRoll: Long,date : String,
-        response: ( status: Boolean, message : String?) -> Unit
+        idPaymentRoll: Long, date: String,
+        response: (status: Boolean, message: String?) -> Unit
     ) {
         try {
 
@@ -176,79 +185,105 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
             contentValues.put(ABSENCE_DATE, date)
             val id: Long = db.insert(TABLE_ABSENCE, null, contentValues)
             if (id > 0) {
-                response( true, null)
+                response(true, null)
             } else {
-                response( false, null)
+                response(false, null)
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()
-            response( false, e.message)
+            response(false, e.message)
         }
 
     }
-    fun getPaymentRollId(date: String, idStaff: String ): Int {
+
+    fun getPaymentRollId(date: String, idStaff: String): Int {
         val db = this.writableDatabase
-        val res = db.rawQuery("SELECT $PAYMENT_ROLL_ID FROM $TABLE_PAYMENT_ROLL where $PAYMENT_ROLL_START_DATE>= ? and $PAYMENT_ROLL_ID_STAFF =?", arrayOf(date, idStaff))
-        if(res!= null && res.moveToFirst()){
-            return  res.getInt(res.getColumnIndex(PAYMENT_ROLL_ID))
+        val res = db.rawQuery(
+            "SELECT $PAYMENT_ROLL_ID FROM $TABLE_PAYMENT_ROLL where $PAYMENT_ROLL_START_DATE>= ? and $PAYMENT_ROLL_ID_STAFF =?",
+            arrayOf(date, idStaff)
+        )
+        if (res != null && res.moveToFirst()) {
+            return res.getInt(res.getColumnIndex(PAYMENT_ROLL_ID))
         }
         return 0
     }
-    fun getLastAbsence(idPaymentRoll: String ): String {
+
+    fun getLastAbsence(idPaymentRoll: String): String {
         val db = this.writableDatabase
-        val res = db.rawQuery("SELECT $ABSENCE_DATE FROM $TABLE_ABSENCE where $ABSENCE_ID_PAYMENT_ROLL>= ?", arrayOf(idPaymentRoll))
-        if(res!= null && res.moveToLast()){
-            return  res.getString(res.getColumnIndex(ABSENCE_DATE))
+        val res = db.rawQuery(
+            "SELECT $ABSENCE_DATE FROM $TABLE_ABSENCE where $ABSENCE_ID_PAYMENT_ROLL>= ?",
+            arrayOf(idPaymentRoll)
+        )
+        if (res != null && res.moveToLast()) {
+            return res.getString(res.getColumnIndex(ABSENCE_DATE))
         }
         return ""
     }
-    fun getAbsencePerDay(date : String) :  ArrayList<Absence>{
+
+    fun getAbsencePerDay(date: String): ArrayList<Absence> {
         val db = this.writableDatabase
-        val res = db.rawQuery("SELECT $ABSENCE_DATE,$ABSENCE_IS_ATTEND,$ABSENCE_IS_PAID,$ABSENCE_ID_PAYMENT_ROLL," +
-                "$TABLE_ABSENCE.$ABSENCE_ID,$STAFF_NAME,$STAFF_IS_PER_MONTH,  $TABLE_STAFF.$STAFF_ID as $PAYMENT_ROLL_ID_STAFF FROM $TABLE_ABSENCE" +
-                " inner join $TABLE_PAYMENT_ROLL on $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID = $TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL" +
-                " inner join $TABLE_STAFF on  $TABLE_STAFF.$STAFF_ID = $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF where $ABSENCE_DATE=?", arrayOf(date))
+        val res = db.rawQuery(
+            "SELECT $ABSENCE_DATE,$ABSENCE_IS_ATTEND,$ABSENCE_IS_PAID,$ABSENCE_ID_PAYMENT_ROLL," +
+                    "$TABLE_ABSENCE.$ABSENCE_ID,$STAFF_NAME,$STAFF_IS_PER_MONTH,  $TABLE_STAFF.$STAFF_ID as $PAYMENT_ROLL_ID_STAFF FROM $TABLE_ABSENCE" +
+                    " inner join $TABLE_PAYMENT_ROLL on $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID = $TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL" +
+                    " inner join $TABLE_STAFF on  $TABLE_STAFF.$STAFF_ID = $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF where $ABSENCE_DATE=?",
+            arrayOf(date)
+        )
         val datas = ArrayList<Absence>()
         while (res.moveToNext()) {
             val data = Absence()
             data.id = res.getInt(res.getColumnIndex(ABSENCE_ID))
             data.idPaymentRoll = res.getInt(res.getColumnIndex(ABSENCE_ID_PAYMENT_ROLL))
             data.idStaff = res.getInt(res.getColumnIndex(PAYMENT_ROLL_ID_STAFF))
-            data.isAttend = res.getInt(res.getColumnIndex(ABSENCE_IS_ATTEND))==1
-            data.isPaid = res.getInt(res.getColumnIndex(ABSENCE_IS_PAID))==1
+            data.isAttend = res.getInt(res.getColumnIndex(ABSENCE_IS_ATTEND)) == 1
+            data.isPaid = res.getInt(res.getColumnIndex(ABSENCE_IS_PAID)) == 1
             data.staffName = res.getString(res.getColumnIndex(STAFF_NAME))
-            data.isPerMonth = res.getInt(res.getColumnIndex(STAFF_IS_PER_MONTH))==1
+            data.isPerMonth = res.getInt(res.getColumnIndex(STAFF_IS_PER_MONTH)) == 1
             datas.add(data)
         }
         return datas
     }
-    fun updateStatusAbsenceStaff(idAbsence : String, cv : ContentValues, response: (status: Boolean) -> Unit){
+
+    fun updateStatusAbsenceStaff(
+        idAbsence: String,
+        cv: ContentValues,
+        response: (status: Boolean) -> Unit
+    ) {
         val db = this.writableDatabase
-        val res = db.update(TABLE_ABSENCE,cv, "$ABSENCE_ID=?", arrayOf(idAbsence) )
-        if(res>0){
+        val res = db.update(TABLE_ABSENCE, cv, "$ABSENCE_ID=?", arrayOf(idAbsence))
+        if (res > 0) {
             response(true)
-        }else{
+        } else {
             response(false)
         }
     }
-    fun getTotalWorkingDay(idStaff: String) : Int{
+
+    fun getTotalWorkingDay(idStaff: String, transactionType : String): Int {
         val db = this.writableDatabase
-        val res = db.rawQuery("SELECT  count($TABLE_ABSENCE.$ABSENCE_ID) as total_working_day from $TABLE_PAYMENT_ROLL  join $TABLE_ABSENCE on " +
-                "$TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL= $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID WHERE $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_STATUS=1 " +
-                "and $TABLE_ABSENCE.$ABSENCE_IS_PAID=1 "+
-                "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF=?", arrayOf(idStaff))
-        if(res!= null && res.moveToFirst()){
-           return res.getInt(res.getColumnIndex("total_working_day"))
+        val res = db.rawQuery(
+            "SELECT  count($TABLE_ABSENCE.$ABSENCE_ID) as total_working_day from $TABLE_PAYMENT_ROLL  join $TABLE_ABSENCE on " +
+                    "$TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL= $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID WHERE " +
+                    "$TABLE_ABSENCE.$ABSENCE_IS_PAID=1 " +
+                    "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF=? "+
+                    "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_STATUS=?", arrayOf(idStaff, transactionType)
+        )
+        if (res != null && res.moveToFirst()) {
+            return res.getInt(res.getColumnIndex("total_working_day"))
         }
         return 0
     }
-    fun getPaymentRoll(idStaff : String ): ArrayList<PaymentRoll>{
+
+    fun getPaymentRoll(idStaff: String, status : String): ArrayList<PaymentRoll> {
         val db = this.writableDatabase
-        val res = db.rawQuery("SELECT $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_START_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_END_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID," +
-                " count($TABLE_ABSENCE.$ABSENCE_ID) as total_working_day from $TABLE_PAYMENT_ROLL  join $TABLE_ABSENCE on " +
-                "$TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL= $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID WHERE $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_STATUS=1 " +
-                "and $TABLE_ABSENCE.$ABSENCE_IS_PAID=1 "+
-                "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF=? group by $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID", arrayOf(idStaff))
+        val res = db.rawQuery(
+            "SELECT $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_START_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_END_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID," +
+                    " count($TABLE_ABSENCE.$ABSENCE_ID) as total_working_day from $TABLE_PAYMENT_ROLL  join $TABLE_ABSENCE on " +
+                    "$TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL= $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID WHERE " +
+                    "$TABLE_ABSENCE.$ABSENCE_IS_PAID=1 " +
+                    "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_STATUS=?" +
+                    "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF=? group by $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID",
+            arrayOf(status, idStaff)
+        )
         val datas = ArrayList<PaymentRoll>()
         while (res.moveToNext()) {
             val data = PaymentRoll()
@@ -261,4 +296,63 @@ class DatabaseController(context: Context) : SQLiteOpenHelper(context, DATABASE_
         return datas
     }
 
+    fun getPaymentRollById(idPaymentRoll: Int): PaymentRoll {
+        val db = this.writableDatabase
+        val res = db.rawQuery(
+            "SELECT $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID_STAFF,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_START_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_END_DATE,$TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID," +
+                    " count($TABLE_ABSENCE.$ABSENCE_ID) as total_working_day from $TABLE_PAYMENT_ROLL  join $TABLE_ABSENCE on " +
+                    "$TABLE_ABSENCE.$ABSENCE_ID_PAYMENT_ROLL= $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID WHERE " +
+                    "$TABLE_ABSENCE.$ABSENCE_IS_PAID=1 " +
+                    "and $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID=? group by $TABLE_PAYMENT_ROLL.$PAYMENT_ROLL_ID",
+            arrayOf(idPaymentRoll.toString())
+        )
+        val data = PaymentRoll()
+        if (res != null && res.moveToFirst()) {
+            data.idStaff = res.getInt(res.getColumnIndex(PAYMENT_ROLL_ID))
+            data.idPaymentRoll = res.getInt(res.getColumnIndex(PAYMENT_ROLL_ID_STAFF))
+            data.startDate = res.getString(res.getColumnIndex(PAYMENT_ROLL_START_DATE))
+            data.endDate = res.getString(res.getColumnIndex(PAYMENT_ROLL_END_DATE))
+            data.paymentDate = res.getString(res.getColumnIndex(PAYMENT_ROLL_DATE))
+            data.totalWorkingDay = res.getInt(res.getColumnIndex("total_working_day"))
+        }
+        return data
+    }
+    fun getAbsenceByPaymentRoll(idPaymentRoll: String): ArrayList<Absence> {
+        val db = this.writableDatabase
+        val res = db.rawQuery(
+            "SELECT $ABSENCE_DATE,$ABSENCE_IS_ATTEND,$ABSENCE_IS_PAID FROM $TABLE_ABSENCE" +
+                    " where $ABSENCE_ID_PAYMENT_ROLL = ?",
+            arrayOf(idPaymentRoll)
+        )
+        val datas = ArrayList<Absence>()
+        while (res.moveToNext()) {
+            val data = Absence()
+            data.date = res.getString(res.getColumnIndex(ABSENCE_DATE))
+            data.isAttend = res.getInt(res.getColumnIndex(ABSENCE_IS_ATTEND)) == 1
+            data.isPaid = res.getInt(res.getColumnIndex(ABSENCE_IS_PAID)) == 1
+            datas.add(data)
+        }
+        return datas
+    }
+    fun updatePaymentRollStatus(
+        idPaymentRoll:String,date : String,        response: (status: Boolean) -> Unit
+
+    ) {
+        try {
+
+            val db = this.writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put(PAYMENT_ROLL_STATUS, PAYMENT_ROLL_PAID)
+            contentValues.put(PAYMENT_ROLL_DATE, date)
+            val id = db.update(TABLE_PAYMENT_ROLL,contentValues, " $PAYMENT_ROLL_ID = ?", arrayOf(idPaymentRoll))
+            if (id > 0) {
+                response(true)
+            } else {
+                response(false)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+
+    }
 }

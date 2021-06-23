@@ -7,6 +7,7 @@ import android.util.Log
 import com.gajikaryawan.gajiq.database.DatabaseController
 import com.gajikaryawan.gajiq.databinding.ActivityMainBinding
 import com.gajikaryawan.gajiq.util.BaseAppCompatActivity
+import com.gajikaryawan.gajiq.util.Constants.Companion.PAYMENT_ROLL_PAID
 import com.gajikaryawan.gajiq.util.TimeConverter
 import java.util.*
 
@@ -27,7 +28,11 @@ class MainActivity : BaseAppCompatActivity() {
         }
         binding.cvSallary.setOnClickListener {
             startActivity(Intent(this, SalaryStaff::class.java))
-
+        }
+        binding.cvReport.setOnClickListener {
+            val intent = Intent(this, SalaryStaff::class.java)
+            intent.putExtra("transactionType", PAYMENT_ROLL_PAID)
+            startActivity(intent)
         }
         absenceStaff()
     }
