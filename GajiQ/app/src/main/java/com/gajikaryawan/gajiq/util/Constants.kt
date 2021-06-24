@@ -4,12 +4,20 @@ class Constants {
     companion object {
         const val DATABASE_NAME = "staff-db"
 
+        const val TABLE_ADMIN = "admin"
+        const val ADMIN_ID = "id"
+        const val ADMIN_NAME = "name"
+        const val ADMIN_PHONE = "phone_number"
+        const val ADMIN_EMAIL = "email"
+            const val ADMIN_PASSWORD = "password"
+
         const val TABLE_STAFF = "staff"
         const val STAFF_ID = "id"
         const val STAFF_NAME = "name"
         const val STAFF_IS_PER_MONTH = "is_per_month"
         const val STAFF_SALARY = "salary"
         const val STAFF_PHONE = "phone_number"
+        const val STAFF_ADMIN_ID = "admin_id"
 
         const val TABLE_PAYMENT_ROLL = "payment_roll"
         const val PAYMENT_ROLL_ID = "id"

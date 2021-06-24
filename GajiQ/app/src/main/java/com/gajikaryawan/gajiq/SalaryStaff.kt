@@ -59,17 +59,19 @@ class SalaryStaff : AppCompatActivity() {
             staff.phone = it.phone
             val totalWorkingDay = databaseController.getTotalWorkingDay(it.id.toString(), transactionType)
             Log.d("total working day ", "$totalWorkingDay")
-            var total=0f
-            if (it.isPerMonth!!) {
-                val perDay = it.salary!!.toFloat() / 30
-                total =   perDay * totalWorkingDay
-            } else {
-                val perDay = it.salary!!.toFloat() * totalWorkingDay
-                total =    perDay
+            if(totalWorkingDay!=0) {
+                var total = 0f
+                if (it.isPerMonth!!) {
+                    val perDay = it.salary!!.toFloat() / 30
+                    total = perDay * totalWorkingDay
+                } else {
+                    val perDay = it.salary!!.toFloat() * totalWorkingDay
+                    total = perDay
+                }
+                staff.totalPay = total
+                totalSalary += total
+                data.add(staff)
             }
-            staff.totalPay = total
-            totalSalary +=total
-            data.add(staff)
         }
         binding.tvTotal.text ="IDR ${getPrice(totalSalary)}"
         return data

@@ -255,7 +255,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Laporan"
+                    android:text="Histori Laporan"
                     android:textSize="18dp"
                     android:textColor="#5e5e5e"
                     android:textStyle="bold"/>
@@ -275,6 +275,7 @@
     </LinearLayout>
 
     <Button
+        android:visibility="gone"
         android:id="@+id/btn_logout"
         android:layout_width="224dp"
         android:layout_height="42dp"
