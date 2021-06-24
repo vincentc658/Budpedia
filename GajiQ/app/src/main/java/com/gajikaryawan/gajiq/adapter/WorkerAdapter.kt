@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.gajikaryawan.gajiq.R
+import com.gajikaryawan.gajiq.database.DatabaseController
 import com.gajikaryawan.gajiq.model.Staff
 import java.lang.Exception
 import java.text.NumberFormat
@@ -15,6 +17,7 @@ import kotlin.collections.ArrayList
 
 class WorkerAdapter(private val context: Context,private val data: ArrayList<Staff>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private  val databaseController = DatabaseController(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.rv_item_staff, parent, false))
 
@@ -24,6 +27,19 @@ class WorkerAdapter(private val context: Context,private val data: ArrayList<Sta
             holder.tvNumber.text = data[position].phone
             holder.tvSalary.text = "IDR ${getPrice(data[position].salary!!.toFloat())}"
             holder.tvType.text = if(data[position].isPerMonth!!)"Perbulan" else "Perhari"
+            holder.tvDelete.setOnClickListener {
+                databaseController.deleteStaff(data[position].id!!.toString()){status, message->
+                    if (status){
+                        data.clear()
+                        data.addAll(databaseController.getStaff())
+                        notifyDataSetChanged()
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+            }
         }
     }
 
@@ -33,6 +49,7 @@ class WorkerAdapter(private val context: Context,private val data: ArrayList<Sta
         var tvName: TextView = view.findViewById(R.id.tvName)
         var tvSalary: TextView = view.findViewById(R.id.tvSalary)
         var tvType: TextView = view.findViewById(R.id.tvType)
+        var tvDelete: TextView = view.findViewById(R.id.tvDelete)
     }
     private fun getPrice(price: Float): String {
         return try {
