@@ -1,0 +1,4 @@
+Date_id,device_alias,region_alias,service_availability,bandwidth_utilization_max
+1/15/2021 0:00,device1181,regionalE,1,1.96E-05
+1/15/2021 0:00,device1181,regionalE,1,0
+1/15/2021 0:00,device740,regionalH,1,0.000499759

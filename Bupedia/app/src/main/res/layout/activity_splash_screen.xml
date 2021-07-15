@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/brown_600"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/ivCircle"
+        android:background="@drawable/background_rounded_teal"
+        app:layout_constraintDimensionRatio="h, 2:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundTeal"
+        app:layout_constraintBottom_toTopOf="@+id/backgroundTeal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <View
+        android:layout_marginTop="@dimen/size_100"
+        android:id="@+id/backgroundTeal"
+        android:background="@color/teal_800"
+        app:layout_constraintDimensionRatio="h, 1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+    <TextView
+        android:textSize="@dimen/text_20"
+        android:layout_marginBottom="@dimen/size_8"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/ivLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Selamat Datang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ivCircle"
+        app:layout_constraintTop_toTopOf="@id/ivCircle"
+        android:layout_width="@dimen/size_150"
+        android:layout_height="@dimen/size_150"/>
+    <TextView
+        android:layout_marginTop="@dimen/size_32"
+        android:textSize="@dimen/text_20"
+        android:layout_marginBottom="@dimen/size_8"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center"
+        android:text="Langke Nyawa LangeTio\n{Panjang Umur Sehat Selalu}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
